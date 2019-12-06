@@ -35,7 +35,7 @@ def find_median(candidates):
 
 
 def estimate(C, q):
-    candidates = [C[i][h[i](q)] for i in range(t)]
+    candidates = [C[i][h[i](q)] * s[i](q) for i in range(t)]
     return find_median(candidates)
 
 def find_approx_top(S, k, epsilon):
@@ -75,7 +75,7 @@ def find_approx_top(S, k, epsilon):
     return heap
 
 k = 3
-epsilon = 1
+epsilon = 0.1
 stream = []
 print('using k = {}, epsilon = {}'.format(k, epsilon))
 with open('stream.txt', 'r') as f:
@@ -86,7 +86,7 @@ with open('stream.txt', 'r') as f:
 # probability of failure
 delta = 0.001
 # number of hash tables - O(log(n/delta))
-t = 20 * int(log(len(stream)/delta))
+t = 10 * int(log(len(stream)/delta))
 # number of things that the hash table hashes to
 b = 8 * k #max(k, 32 * /((epsilon * n_k) ** 2))
 
@@ -94,5 +94,5 @@ C = [[0] * b for i in range(t)]
 h, s = generate_hashes(b, t)
 heap = find_approx_top(stream, k, epsilon)
 print('key, value')
-print(sorted(heap.items()))
-print(sorted(Counter(stream).most_common(k)))
+print(sorted(heap.items(), key=lambda x: -x[1]))
+print(Counter(stream).most_common(k))
